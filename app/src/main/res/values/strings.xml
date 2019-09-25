@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Weather</string>
+    <string name="set_location">Set location</string>
+    <string name="set_current_location">Set current location</string>
 </resources>
