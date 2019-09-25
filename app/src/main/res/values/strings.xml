@@ -2,4 +2,8 @@
     <string name="app_name">Weather</string>
     <string name="set_location">Set location</string>
     <string name="set_current_location">Set current location</string>
+    <string name="weather_icon">Weather icon</string>
+    <string name="temperature_icon">Temperature icon</string>
+    <string name="wind_icon">Wind icon</string>
+    <string name="humidity_icon">Humidity icon</string>
 </resources>
