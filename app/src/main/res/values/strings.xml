@@ -6,4 +6,6 @@
     <string name="temperature_icon">Temperature icon</string>
     <string name="wind_icon">Wind icon</string>
     <string name="humidity_icon">Humidity icon</string>
+    <string name="min_max_temperature">%1$s°/%2$s°</string>
+    <string name="temperature">%1$s°</string>
 </resources>

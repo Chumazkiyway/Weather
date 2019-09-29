@@ -43,6 +43,12 @@ class DayForecastAdapter(private var items: List<DayForecast>,
                     tvTemperature.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
                     ivWeatherCondition.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimaryDark),
                         android.graphics.PorterDuff.Mode.SRC_IN)
+                } else {
+                    container.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent))
+                    tvWeekDay.setTextColor(ContextCompat.getColor(context, R.color.colorBlack))
+                    tvTemperature.setTextColor(ContextCompat.getColor(context, R.color.colorBlack))
+                    ivWeatherCondition.setColorFilter(ContextCompat.getColor(context, R.color.colorBlack),
+                        android.graphics.PorterDuff.Mode.SRC_IN)
                 }
 
                 root.setOnClickListener {

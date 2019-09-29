@@ -1,4 +1,3 @@
 package com.chumazkiyway.weather.models
 
-class TimeForecast{
-}
+data class TimeForecast(val time: String, val weather: String, val temperature: Int )

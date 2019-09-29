@@ -43,14 +43,12 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_time_forecast"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
+                android:layout_height="wrap_content"/>
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_day_forecast"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:layout_height="wrap_content"/>
 
     </LinearLayout>
 </layout>

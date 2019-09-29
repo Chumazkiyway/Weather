@@ -19,12 +19,15 @@ class TimeForecastAdapter(private var items: List<TimeForecast>
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
 
+    fun replaceData(list: List<TimeForecast>) {
+        items = list
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(private var binding: RvItemTimeForecastBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(timeForecast: TimeForecast) {
-            with(binding) {
-                binding.timeForecast = timeForecast
-                executePendingBindings()
-            }
+            binding.timeForecast = timeForecast
+            binding.executePendingBindings()
         }
     }
 }
