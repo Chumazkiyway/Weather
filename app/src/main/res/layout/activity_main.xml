@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
-
-    <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="viewModel"
+                  type="com.chumazkiyway.weather.viewmodels.MainActivityViewModel"/>
+    </data>
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimaryDark"
-            android:theme="?attr/actionBarTheme"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".views.MainActivity">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark"
+                android:theme="?attr/actionBarTheme"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
             <ImageView
                     android:id="@+id/iv_set_location"
                     android:layout_width="wrap_content"
@@ -28,24 +32,25 @@
                     android:layout_height="wrap_content"
                     tools:text="Zaporizhzhya"
                     android:textSize="16sp"
-                    android:text="Zaporizhzhya"
+                    android:text="@{viewModel.location.cityName}"
                     android:paddingStart="8dp"
                     android:textColor="@color/colorAccent"/>
-    </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
 
-    <include layout="@layout/weather_details"/>
+        <include layout="@layout/weather_details"/>
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_time_forecast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_time_forecast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_day_forecast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_day_forecast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
 
-</LinearLayout>
+    </LinearLayout>
+</layout>
