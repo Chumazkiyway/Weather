@@ -32,9 +32,9 @@ class Network (private val clientId: String, private val clientSecret: String) {
         return networkApi.getDailyForecast(long, lat, clientId, clientSecret).observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun getTimeForecast( long: Float, lat: Float) : Observable<Response>{
+    fun getTimeForecast( long: Float, lat: Float, from: String, to: String) : Observable<Response>{
         val networkApi = retrofit.create(WeatherApi::class.java)
-        return networkApi.getTimeForecast(long, lat, clientId, clientSecret).observeOn(AndroidSchedulers.mainThread())
+        return networkApi.getTimeForecast(long, lat, from, to, clientId, clientSecret).observeOn(AndroidSchedulers.mainThread())
     }
 
     companion object {

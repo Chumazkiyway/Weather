@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val onDayClick: (Int) -> Unit = { position ->
-        //TODO: Change day
+        viewModel.getTimeForecast(position)
     }
 
     override fun onDestroy() {
