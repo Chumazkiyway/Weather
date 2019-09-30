@@ -3,6 +3,10 @@ package com.chumazkiyway.weather.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.chumazkiyway.weather.R
+import com.chumazkiyway.weather.getFromTo
+import com.chumazkiyway.weather.getWeatherIcon
+import com.chumazkiyway.weather.getWindDirIcon
 import com.chumazkiyway.weather.models.DayForecast
 import com.chumazkiyway.weather.models.Location
 import com.chumazkiyway.weather.models.TimeForecast
@@ -19,11 +23,12 @@ class MainActivityViewModel(private val locale: Locale) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
     private val network = Network("WYw6I6BXtRZ6FoolWOcbk" , "Frab59acfa8ANWYQ3TDY5BfWo9K2iEsHP7n5d16L")
 
-    var currentPosition = 0
+    private var currentPosition = 0
 
     var location = Location("Zaporizhzhya, ua", 35.18333f, 47.81667f)
     var dailyForecastList = MutableLiveData<List<DayForecast>>()
     var timeForecastList = MutableLiveData<List<TimeForecast>>()
+    var selectedDay = MutableLiveData<DayForecast>()
 
     init {
         compositeDisposable.add(
@@ -42,14 +47,17 @@ class MainActivityViewModel(private val locale: Locale) : ViewModel() {
 
                             val dayOfWeek = SimpleDateFormat("EEE", locale).format(df)
                             val date = SimpleDateFormat("EEE, dd MMMMMM", locale).format(df)
+                            val windDir = getWindDirIcon(period.windDirMax!!)
+                            val weather = getWeatherIcon(period.icon!!)
 
                             val d = DayForecast(dayOfWeek.toString(), date.toString(), period.dateTimeISO!!,
-                                period.minTempC!!, period.maxTempC!!, period.maxHumidity!!, period.windDirMax!!,
-                                period.windSpeedMaxKPH!!)
+                                period.minTempC!!, period.maxTempC!!, period.maxHumidity!!, windDir,
+                                period.windSpeedMaxKPH!!, weather)
                             list.add(d)
                         }
                     }
                     dailyForecastList.value = list
+                    selectedDay.value = dailyForecastList.value?.get(currentPosition)
                     getTimeForecast(currentPosition)
                 }
         )
@@ -57,20 +65,10 @@ class MainActivityViewModel(private val locale: Locale) : ViewModel() {
 
     fun getTimeForecast (position: Int) {
         currentPosition = position
+        selectedDay.value = dailyForecastList.value?.get(currentPosition)
 
-        var from = dailyForecastList.value?.get(position)?.dateISO
-
-        //add 1 day(next day) to parameter - "to"
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale)
-        val c = Calendar.getInstance()
-        c.time = sdf.parse(from)
-        c.add(Calendar.DATE, 1)
-        val to = sdf.format(c.time)
-
-        if(currentPosition == 0){
-            //get current date with hours
-            from = Calendar.getInstance().time.toString()
-        }
+        val (from, to) = getFromTo(dailyForecastList.value?.get(currentPosition)?.dateISO!!,
+                                                    currentPosition, locale )
 
         if(from != null && to != null){
             compositeDisposable.add(
@@ -85,7 +83,8 @@ class MainActivityViewModel(private val locale: Locale) : ViewModel() {
                             it.periods?.forEach { period ->
                                 val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale).parse(period.dateTimeISO)
                                 val time = SimpleDateFormat("HH", locale).format(df)
-                                val t = TimeForecast(time.toString(), period.weather!!, period.maxTempC!! )
+                                val weather = getWeatherIcon(period.icon!!)
+                                val t = TimeForecast(time.toString(), weather, period.maxTempC!! )
                                 list.add(t)
                             }
                         }

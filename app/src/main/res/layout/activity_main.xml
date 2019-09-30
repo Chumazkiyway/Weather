@@ -38,7 +38,10 @@
         </androidx.appcompat.widget.Toolbar>
 
 
-        <include layout="@layout/weather_details"/>
+        <include
+                layout="@layout/weather_details"
+                android:id="@+id/weather_details"
+                app:details="@{viewModel.selectedDay}"/>
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_time_forecast"

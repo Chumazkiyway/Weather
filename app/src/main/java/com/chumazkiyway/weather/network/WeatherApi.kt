@@ -10,7 +10,8 @@ interface WeatherApi {
             "&format=json" +
             "&filter=day" +
             "&limit=7" +
-            "&fields=periods.dateTimeISO,periods.maxTempC,loc,periods.minTempC,periods.maxHumidity,periods.windSpeedMaxKPH,periods.windDirMax,periods.weather")
+            "&fields=periods.icon,periods.dateTimeISO,periods.maxTempC,loc,periods.minTempC,periods.maxHumidity," +
+            "periods.windSpeedMaxKPH,periods.windDirMax")
     fun getDailyForecast(
         @Path("lat") lat: Float,
         @Path("long") long: Float,
@@ -21,7 +22,8 @@ interface WeatherApi {
             "&format=json" +
             "&filter=1hr" +
             "&limit=168" +
-            "&fields=periods.dateTimeISO,periods.maxTempC,loc,periods.minTempC,periods.maxHumidity,periods.windSpeedMaxKPH,periods.windDirMax,periods.weather")
+            "&fields=periods.icon,periods.dateTimeISO,periods.maxTempC,loc,periods.minTempC,periods.maxHumidity," +
+            "periods.windSpeedMaxKPH,periods.windDirMax")
     fun getTimeForecast(
         @Path("lat") lat: Float,
         @Path("long") long: Float,

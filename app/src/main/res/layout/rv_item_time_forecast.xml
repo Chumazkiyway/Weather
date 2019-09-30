@@ -41,7 +41,7 @@
         <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                app:srcCompat="@drawable/ic_white_day_rain"
+                app:imageResource="@{timeForecast.weatherIcon}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:id="@+id/imageView"

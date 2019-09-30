@@ -59,6 +59,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        viewModel.selectedDay.observe(this, Observer<DayForecast>{
+            it?.let { dayForecast ->
+                binding.weatherDetails.details = dayForecast
+            }
+        })
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }

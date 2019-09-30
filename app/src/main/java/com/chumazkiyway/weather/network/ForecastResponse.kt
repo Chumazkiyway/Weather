@@ -32,12 +32,12 @@ class Periods {
     var windDirMax: String? = null
     @SerializedName("windSpeedMaxKPH")
     var windSpeedMaxKPH: Int? = null
-    @SerializedName("weather")
-    var weather: String? = null
     @SerializedName("maxTempC")
     var maxTempC: Int? = null
     @SerializedName("maxHumidity")
     var maxHumidity: Int? = null
     @SerializedName("minTempC")
     var minTempC: Int? = null
+    @SerializedName("icon")
+    var icon: String? = null
 }

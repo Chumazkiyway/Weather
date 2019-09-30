@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import com.chumazkiyway.weather.R
 import com.chumazkiyway.weather.databinding.RvItemDayForecastBinding
 import com.chumazkiyway.weather.models.DayForecast
+import androidx.databinding.BindingAdapter
+import android.widget.ImageView
+
 
 class DayForecastAdapter(private var items: List<DayForecast>,
                          private val itemClick: (Int) -> Unit,

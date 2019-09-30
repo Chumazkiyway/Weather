@@ -3,6 +3,8 @@ package com.chumazkiyway.weather.views.adapters
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import com.chumazkiyway.weather.databinding.RvItemTimeForecastBinding
 import com.chumazkiyway.weather.models.TimeForecast
 
