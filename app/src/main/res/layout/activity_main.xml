@@ -25,7 +25,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_place"
-                    android:contentDescription="@string/set_location"/>
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/set_location" />
             <TextView
                     android:id="@+id/tv_current_location"
                     android:layout_width="wrap_content"
@@ -33,7 +38,10 @@
                     tools:text="Zaporizhzhia"
                     android:textSize="16sp"
                     android:text="@{viewModel.cityName}"
-                    android:paddingStart="8dp"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:textColor="@color/colorAccent"/>
         </androidx.appcompat.widget.Toolbar>
 

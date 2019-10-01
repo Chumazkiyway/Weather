@@ -22,14 +22,10 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.api.model.Place
 import android.content.Intent
 import android.app.Activity
 import com.chumazkiyway.weather.views.MapsActivity.Companion.LAT
 import com.chumazkiyway.weather.views.MapsActivity.Companion.LNG
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -86,8 +82,13 @@ class MainActivity : AppCompatActivity() {
         })
 
         iv_set_location.setOnClickListener {
-            val i = Intent(this, MapsActivity::class.java)
+            val i = Intent(this@MainActivity, MapsActivity::class.java)
             startActivityForResult(i, MAPS_REQUEST_CODE)
+        }
+
+        tv_current_location.setOnClickListener {
+            val i = Intent(this@MainActivity, SearchActivity::class.java)
+            startActivityForResult(i, AUTOCOMPLETE_REQUEST_CODE)
         }
 
         setSupportActionBar(toolbar)
@@ -98,7 +99,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_items, menu)
+        menuInflater.inflate(R.menu.menu_item_current_location, menu)
         return true
     }
 
@@ -155,12 +156,6 @@ class MainActivity : AppCompatActivity() {
                 Array(1){ACCESS_FINE_LOCATION},
                 PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
         }
-    }
-
-    private fun showAutocompleteActivity() {
-        val fields = Arrays.asList(Place.Field.ID, Place.Field.NAME)
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).build(this)
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
 }
 

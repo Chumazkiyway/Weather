@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_maps.*
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback , GoogleMap.OnMapClickListener {
 
     private lateinit var map: GoogleMap
-    private val marker = MarkerOptions()
+
     private val viewModel: MapsActivityViewModel by lazy {
         ViewModelProviders.of(this).get(MapsActivityViewModel::class.java)
     }
