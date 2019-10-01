@@ -1,4 +1,4 @@
-package com.chumazkiyway.weather.network
+package com.chumazkiyway.weather.utils.network
 
 import io.reactivex.Observable
 import retrofit2.http.GET
@@ -6,7 +6,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface WeatherApi {
-    @GET("forecasts/{lat},{long}?" +
+    @GET("forecasts/{lat},{lng}?" +
             "&format=json" +
             "&filter=day" +
             "&limit=7" +
@@ -14,11 +14,11 @@ interface WeatherApi {
             "periods.windSpeedMaxKPH,periods.windDirMax")
     fun getDailyForecast(
         @Path("lat") lat: Double,
-        @Path("long") long: Double,
+        @Path("lng") long: Double,
         @Query("client_id") clientId: String,
         @Query("client_secret") clientSecret: String ): Observable<Response>
 
-    @GET("forecasts/{lat},{long}?" +
+    @GET("forecasts/{lat},{lng}?" +
             "&format=json" +
             "&filter=1hr" +
             "&limit=168" +
@@ -26,7 +26,7 @@ interface WeatherApi {
             "periods.windSpeedMaxKPH,periods.windDirMax")
     fun getTimeForecast(
         @Path("lat") lat: Double,
-        @Path("long") long: Double,
+        @Path("lng") long: Double,
         @Query("from") from: String,
         @Query("to") to: String,
         @Query("client_id") clientId: String,

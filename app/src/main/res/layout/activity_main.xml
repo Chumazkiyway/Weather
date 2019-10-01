@@ -30,9 +30,9 @@
                     android:id="@+id/tv_current_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Zaporizhzhya"
+                    tools:text="Zaporizhzhia"
                     android:textSize="16sp"
-                    android:text="@{viewModel.place}"
+                    android:text="@{viewModel.cityName}"
                     android:paddingStart="8dp"
                     android:textColor="@color/colorAccent"/>
         </androidx.appcompat.widget.Toolbar>

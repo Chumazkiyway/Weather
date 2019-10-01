@@ -1,6 +1,6 @@
-package com.chumazkiyway.weather
+package com.chumazkiyway.weather.utils
 
-import java.text.ParsePosition
+import com.chumazkiyway.weather.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,7 +52,7 @@ fun getWeatherIcon(icon: String) : Int {
             "showersw.png"-> R.drawable.ic_white_day_rain
             "blowingsnow.png", "blizzard.png", "mcloudyt.png", "rainw.png", "snowtorain.png", "tstorm.png",
             "wintrymix.png"-> R.drawable.ic_white_day_shower
-            "tstorms.png", "tstormsw.png" ->R.drawable.ic_white_day_thunder
+            "tstorms.png", "tstormsw.png" -> R.drawable.ic_white_day_thunder
             else -> R.drawable.ic_white_day_cloudy
         }
     } else {

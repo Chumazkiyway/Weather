@@ -4,14 +4,14 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.chumazkiyway.weather.getFromTo
-import com.chumazkiyway.weather.getWeatherIcon
-import com.chumazkiyway.weather.getWindDirIcon
+import com.chumazkiyway.weather.utils.getFromTo
+import com.chumazkiyway.weather.utils.getWeatherIcon
+import com.chumazkiyway.weather.utils.getWindDirIcon
 import com.chumazkiyway.weather.models.DayForecast
 import com.chumazkiyway.weather.models.Location
 import com.chumazkiyway.weather.models.TimeForecast
-import com.chumazkiyway.weather.network.Network
-import com.chumazkiyway.weather.network.Response
+import com.chumazkiyway.weather.utils.network.Network
+import com.chumazkiyway.weather.utils.network.Response
 import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
@@ -23,32 +23,44 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.location.Geocoder
 import android.content.Context
+import com.chumazkiyway.weather.WeatherApplication
 import io.reactivex.Single
 import java.io.IOException
+import javax.inject.Inject
 
 
 class MainActivityViewModel(private val locale: Locale, private val context: Context) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    private val network = Network("WYw6I6BXtRZ6FoolWOcbk" , "Frab59acfa8ANWYQ3TDY5BfWo9K2iEsHP7n5d16L")
-    private val location = Location("Zaporizhzhia", 35.18333, 47.81667)
     private var currentPosition = 0
 
     val dailyForecastList = MutableLiveData<List<DayForecast>>()
     val timeForecastList = MutableLiveData<List<TimeForecast>>()
     val selectedDay = MutableLiveData<DayForecast>()
-    val place = MutableLiveData<String>()
+    val cityName = MutableLiveData<String>()
+
+    @Inject
+    lateinit var location: Location
+    @Inject
+    lateinit var network: Network
+
+    init {
+        WeatherApplication.weatherComponent.inject(this)
+        cityName.value = location.cityName
+    }
 
     fun getTimeForecast (position: Int) {
         currentPosition = position
         selectedDay.value = dailyForecastList.value?.get(currentPosition)
 
-        val (from, to) = getFromTo(dailyForecastList.value?.get(currentPosition)?.dateISO!!,
-                                                    currentPosition, locale )
+        val (from, to) = getFromTo(
+            dailyForecastList.value?.get(currentPosition)?.dateISO!!,
+            currentPosition, locale
+        )
 
         if(from != null && to != null){
             compositeDisposable.add(
-                network.getTimeForecast(location.lat, location.long, from, to)
+                network.getTimeForecast(location.lat, location.lng, from, to)
                     .onErrorReturn {
                         Log.d("NETWORK_ERROR", it.message)
                         Response()
@@ -80,7 +92,7 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
                 val response = task.result
                 val latLng = response!!.placeLikelihoods.first().place.latLng
                 location.lat = latLng!!.latitude
-                location.long = latLng.longitude
+                location.lng = latLng.longitude
                 compositeDisposable.add(getDayForecast())
                 compositeDisposable.add(getCityName())
             } else {
@@ -94,7 +106,14 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
 
     fun onDestroy() = compositeDisposable.dispose()
 
-    private fun getDayForecast() = network.getDailyForecast(location.lat, location.long)
+    fun onPickPlace(lat: Double, lng: Double) {
+        location.lat = lat
+        location.lng = lng
+        compositeDisposable.add(getDayForecast())
+        compositeDisposable.add(getCityName())
+    }
+
+    private fun getDayForecast() = network.getDailyForecast(location.lat, location.lng)
         .onErrorReturn {
             Log.d("NETWORK_ERROR", it.message)
             Response()
@@ -124,7 +143,7 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
     private fun getCityName() = Single.create<String>{
             val coder = Geocoder(context, locale)
             try {
-                val results = coder.getFromLocation(location.lat, location.long, 1)
+                val results = coder.getFromLocation(location.lat, location.lng, 1)
                 it.onSuccess(results.first().locality)
             } catch (e: IOException) {
                 Log.e("GEOCODER ERROR:", e.message)
@@ -134,7 +153,7 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { res ->
                 location.cityName = res
-                place.value = res
+                cityName.value = location.cityName
             }
 
 

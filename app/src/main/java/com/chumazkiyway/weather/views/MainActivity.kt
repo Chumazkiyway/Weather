@@ -22,6 +22,15 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.api.model.Place
+import android.content.Intent
+import android.app.Activity
+import com.chumazkiyway.weather.views.MapsActivity.Companion.LAT
+import com.chumazkiyway.weather.views.MapsActivity.Companion.LNG
+import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,6 +53,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
+        const val MAPS_REQUEST_CODE = 2
+        const val AUTOCOMPLETE_REQUEST_CODE = 3
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,9 +81,15 @@ class MainActivity : AppCompatActivity() {
             it?.let { dayForecast -> binding.weatherDetails.details = dayForecast }
         })
 
-        viewModel.place.observe(this, Observer<String>{
-            it?.let { place -> binding.tvCurrentLocation.text = place }
+        viewModel.cityName.observe(this, Observer<String>{
+            it?.let { cityName -> binding.tvCurrentLocation.text = cityName}
         })
+
+        iv_set_location.setOnClickListener {
+            val i = Intent(this, MapsActivity::class.java)
+            startActivityForResult(i, MAPS_REQUEST_CODE)
+        }
+
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
@@ -108,6 +125,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode) {
+            MAPS_REQUEST_CODE -> {
+                if(resultCode == Activity.RESULT_OK){
+                    data.let {
+                        val lat = it!!.getDoubleExtra(LAT,0.0)
+                        val lng = it.getDoubleExtra(LNG,0.0)
+
+                        if(lat != 0.0 && lng != 0.0) {
+                            viewModel.onPickPlace(lat, lng)
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
     private val onDayClick: (Int) -> Unit = { position ->
         viewModel.getTimeForecast(position)
     }
@@ -120,6 +155,12 @@ class MainActivity : AppCompatActivity() {
                 Array(1){ACCESS_FINE_LOCATION},
                 PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
         }
+    }
+
+    private fun showAutocompleteActivity() {
+        val fields = Arrays.asList(Place.Field.ID, Place.Field.NAME)
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).build(this)
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
 }
 

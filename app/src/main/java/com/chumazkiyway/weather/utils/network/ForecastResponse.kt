@@ -1,4 +1,4 @@
-package com.chumazkiyway.weather.network
+package com.chumazkiyway.weather.utils.network
 
 import com.google.gson.annotations.SerializedName
 
