@@ -13,8 +13,8 @@ interface WeatherApi {
             "&fields=periods.icon,periods.dateTimeISO,periods.maxTempC,loc,periods.minTempC,periods.maxHumidity," +
             "periods.windSpeedMaxKPH,periods.windDirMax")
     fun getDailyForecast(
-        @Path("lat") lat: Float,
-        @Path("long") long: Float,
+        @Path("lat") lat: Double,
+        @Path("long") long: Double,
         @Query("client_id") clientId: String,
         @Query("client_secret") clientSecret: String ): Observable<Response>
 
@@ -25,8 +25,8 @@ interface WeatherApi {
             "&fields=periods.icon,periods.dateTimeISO,periods.maxTempC,loc,periods.minTempC,periods.maxHumidity," +
             "periods.windSpeedMaxKPH,periods.windDirMax")
     fun getTimeForecast(
-        @Path("lat") lat: Float,
-        @Path("long") long: Float,
+        @Path("lat") lat: Double,
+        @Path("long") long: Double,
         @Query("from") from: String,
         @Query("to") to: String,
         @Query("client_id") clientId: String,

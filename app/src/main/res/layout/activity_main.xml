@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     tools:text="Zaporizhzhya"
                     android:textSize="16sp"
-                    android:text="@{viewModel.location.cityName}"
+                    android:text="@{viewModel.place}"
                     android:paddingStart="8dp"
                     android:textColor="@color/colorAccent"/>
         </androidx.appcompat.widget.Toolbar>

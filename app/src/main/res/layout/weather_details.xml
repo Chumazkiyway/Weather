@@ -24,7 +24,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_date" app:layout_constraintVertical_bias="0.48000002"
                 android:layout_marginBottom="24dp"/>
         <ImageView
-                android:layout_width="10dp"
+                android:layout_width="18dp"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_temp"
                 android:id="@+id/iv_temperature"

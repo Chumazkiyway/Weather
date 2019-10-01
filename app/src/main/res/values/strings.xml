@@ -10,4 +10,7 @@
     <string name="temperature">%1$s°</string>
     <string name="humidity">%1$s\%%</string>
     <string name="wind_speed">%1$sk/h</string>
+    <string name="places_api_key">AIzaSyA8e_yXZWcKJQENOjbVERHi9Yw5vgu3bsg</string>
+    <string name="weather_access_id">WYw6I6BXtRZ6FoolWOcbk</string>
+    <string name="weather_secret_key">Frab59acfa8ANWYQ3TDY5BfWo9K2iEsHP7n5d16L</string>
 </resources>
