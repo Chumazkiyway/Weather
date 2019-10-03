@@ -24,6 +24,7 @@ import java.util.*
 import android.location.Geocoder
 import android.content.Context
 import com.chumazkiyway.weather.WeatherApplication
+import com.google.android.gms.maps.model.LatLng
 import io.reactivex.Single
 import java.io.IOException
 import javax.inject.Inject
@@ -93,7 +94,7 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
                 val latLng = response!!.placeLikelihoods.first().place.latLng
                 location.lat = latLng!!.latitude
                 location.lng = latLng.longitude
-                compositeDisposable.add(getDayForecast())
+                compositeDisposable.add(getDayForecastByLatLng())
                 compositeDisposable.add(getCityName())
             } else {
                 val exception = task.exception
@@ -109,42 +110,63 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
     fun onPickPlace(lat: Double, lng: Double) {
         location.lat = lat
         location.lng = lng
-        compositeDisposable.add(getDayForecast())
+        compositeDisposable.add(getDayForecastByLatLng())
         compositeDisposable.add(getCityName())
     }
 
-    private fun getDayForecast() = network.getDailyForecast(location.lat, location.lng)
+    fun onSelectedLocation(city: String) {
+        location.cityName = city
+        cityName.value = city.substring(0,city.indexOf(','))
+        compositeDisposable.add(getDayForecastByCity())
+        compositeDisposable.add(getLatLng())
+    }
+
+    private fun getDayForecastByLatLng() = network.getDailyForecastByLatLng(location.lat, location.lng)
         .onErrorReturn {
             Log.d("NETWORK_ERROR", it.message)
             Response()
         }
-        .subscribe {
-            val list = arrayListOf<DayForecast>()
+        .subscribe{ createDayForecast(it) }
 
-            it.locPeriods?.forEach{
-                it.periods?.forEach { period ->
-                    val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale).parse(period.dateTimeISO)
-                    val dayOfWeek = SimpleDateFormat("EEE", locale).format(df)
-                    val date = SimpleDateFormat("EEE, dd MMMMMM", locale).format(df)
-                    val windDir = getWindDirIcon(period.windDirMax!!)
-                    val weather = getWeatherIcon(period.icon!!)
-
-                    val d = DayForecast(dayOfWeek.toString(), date.toString(), period.dateTimeISO!!,
-                        period.minTempC!!, period.maxTempC!!, period.maxHumidity!!, windDir,
-                        period.windSpeedMaxKPH!!, weather)
-                    list.add(d)
-                }
-            }
-            dailyForecastList.value = list
-            selectedDay.value = dailyForecastList.value?.get(currentPosition)
-            getTimeForecast(currentPosition)
+    private fun getDayForecastByCity() = network.getDailyForecastByCity(location.cityName)
+        .onErrorReturn {
+            Log.d("NETWORK_ERROR", it.message)
+            Response()
         }
+        .subscribe{ createDayForecast(it) }
+
+    private fun createDayForecast(res : Response) {
+        val list = arrayListOf<DayForecast>()
+
+        res.locPeriods?.forEach{
+            it.periods?.forEach { period ->
+                val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale).parse(period.dateTimeISO)
+                val dayOfWeek = SimpleDateFormat("EEE", locale).format(df)
+                val date = SimpleDateFormat("EEE, dd MMMMMM", locale).format(df)
+                val windDir = getWindDirIcon(period.windDirMax!!)
+                val weather = getWeatherIcon(period.icon!!)
+
+                val d = DayForecast(dayOfWeek.toString(), date.toString(), period.dateTimeISO!!,
+                    period.minTempC!!, period.maxTempC!!, period.maxHumidity!!, windDir,
+                    period.windSpeedMaxKPH!!, weather)
+                list.add(d)
+            }
+        }
+        dailyForecastList.value = list
+        selectedDay.value = dailyForecastList.value?.get(currentPosition)
+        getTimeForecast(currentPosition)
+    }
 
     private fun getCityName() = Single.create<String>{
             val coder = Geocoder(context, locale)
             try {
                 val results = coder.getFromLocation(location.lat, location.lng, 1)
-                it.onSuccess(results.first().locality)
+                if(results.first().locality != null) {
+                    it.onSuccess(results.first().locality)
+                } else {
+                    it.onSuccess("")
+                }
+
             } catch (e: IOException) {
                 Log.e("GEOCODER ERROR:", e.message)
                 it.onError(e)
@@ -156,5 +178,20 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
                 cityName.value = location.cityName
             }
 
-
+    private fun getLatLng() = Single.create<LatLng>{
+        val coder = Geocoder(context, locale)
+        try {
+            val results = coder.getFromLocationName(location.cityName, 1)
+            val latLng = LatLng(results.first().latitude, results.first().longitude)
+            it.onSuccess(latLng)
+        } catch (e: IOException) {
+            Log.e("GEOCODER ERROR:", e.message)
+            it.onError(e)
+        }
+    }.subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { res ->
+            location.lat = res.latitude
+            location.lng = res.longitude
+        }
 }

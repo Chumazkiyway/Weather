@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-
+        <import type="android.view.View"/>
+        <variable name="viewModel" type="com.chumazkiyway.weather.viewmodels.SearchActivityViewModel"/>
     </data>
     <LinearLayout
             android:orientation="vertical"
@@ -33,7 +34,9 @@
                 android:id="@+id/location_list"
                 android:layout_gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:visibility="@{viewModel.isLoading ? View.GONE : View.VISIBLE}"/>
+
         <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_marginTop="16dp"
@@ -42,6 +45,6 @@
                 android:theme="@style/Widget.AppCompat.ProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"/>
     </LinearLayout>
 </layout>

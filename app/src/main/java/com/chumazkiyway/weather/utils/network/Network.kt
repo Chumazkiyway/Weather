@@ -27,9 +27,14 @@ class Network (private val clientId: String, private val clientSecret: String) {
         .client(httpClient)
         .build()
 
-    fun getDailyForecast( long: Double, lat: Double) : Observable<Response> {
+    fun getDailyForecastByLatLng(long: Double, lat: Double) : Observable<Response> {
         val networkApi = retrofit.create(WeatherApi::class.java)
-        return networkApi.getDailyForecast(long, lat, clientId, clientSecret).observeOn(AndroidSchedulers.mainThread())
+        return networkApi.getDailyForecastByLatLng(long, lat, clientId, clientSecret).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getDailyForecastByCity(city: String) : Observable<Response> {
+        val networkApi = retrofit.create(WeatherApi::class.java)
+        return networkApi.getDailyForecastByCity(city, clientId, clientSecret).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getTimeForecast( long: Double, lat: Double, from: String, to: String) : Observable<Response>{

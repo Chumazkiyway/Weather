@@ -18,12 +18,12 @@
                 android:value="@string/google_maps_key"/>
 
         <activity
-                android:name=".views.MapsActivity">
+                android:name=".views.activities.MapsActivity">
         </activity>
         <activity
-                android:name=".views.SearchActivity">
+                android:name=".views.activities.SearchActivity">
         </activity>
-        <activity android:name=".views.MainActivity">
+        <activity android:name=".views.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>

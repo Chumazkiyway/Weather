@@ -1,4 +1,4 @@
-package com.chumazkiyway.weather.views
+package com.chumazkiyway.weather.views.activities
 
 import androidx.lifecycle.ViewModelProviders
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +13,7 @@ import com.chumazkiyway.weather.databinding.ActivityMainBinding
 import com.chumazkiyway.weather.models.DayForecast
 import com.chumazkiyway.weather.models.TimeForecast
 import com.chumazkiyway.weather.viewmodels.MainActivityViewModel
-import com.chumazkiyway.weather.viewmodels.MainActivityViewModelFactory
+import com.chumazkiyway.weather.viewmodels.factory.MainActivityViewModelFactory
 import com.chumazkiyway.weather.views.adapters.DayForecastAdapter
 import com.chumazkiyway.weather.views.adapters.TimeForecastAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,8 +24,9 @@ import androidx.core.content.ContextCompat
 import com.google.android.libraries.places.api.Places
 import android.content.Intent
 import android.app.Activity
-import com.chumazkiyway.weather.views.MapsActivity.Companion.LAT
-import com.chumazkiyway.weather.views.MapsActivity.Companion.LNG
+import com.chumazkiyway.weather.views.activities.MapsActivity.Companion.LAT
+import com.chumazkiyway.weather.views.activities.MapsActivity.Companion.LNG
+import com.chumazkiyway.weather.views.activities.SearchActivity.Companion.SELECTED_LOCATION
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,7 +36,12 @@ class MainActivity : AppCompatActivity() {
     private val placesClient by lazy { Places.createClient(this) }
 
     private val viewModel: MainActivityViewModel by lazy {
-        ViewModelProviders.of(this, MainActivityViewModelFactory(resources.configuration.locale, this))
+        ViewModelProviders.of(this,
+            MainActivityViewModelFactory(
+                resources.configuration.locale,
+                this
+            )
+        )
             .get(MainActivityViewModel::class.java)
     }
 
@@ -50,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
         const val MAPS_REQUEST_CODE = 2
-        const val AUTOCOMPLETE_REQUEST_CODE = 3
+        const val SEARCH_REQUEST_CODE = 3
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
         tv_current_location.setOnClickListener {
             val i = Intent(this@MainActivity, SearchActivity::class.java)
-            startActivityForResult(i, AUTOCOMPLETE_REQUEST_CODE)
+            startActivityForResult(i, SEARCH_REQUEST_CODE)
         }
 
         setSupportActionBar(toolbar)
@@ -140,7 +146,14 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-
+            SEARCH_REQUEST_CODE -> {
+                if(resultCode == Activity.RESULT_OK) {
+                    data.let {
+                        val city = it!!.getStringExtra(SELECTED_LOCATION)
+                        viewModel.onSelectedLocation(city)
+                    }
+                }
+            }
         }
     }
 
@@ -154,7 +167,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             ActivityCompat.requestPermissions(this,
                 Array(1){ACCESS_FINE_LOCATION},
-                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
+                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+            )
         }
     }
 }

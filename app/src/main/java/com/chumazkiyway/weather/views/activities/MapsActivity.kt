@@ -1,4 +1,4 @@
-package com.chumazkiyway.weather.views
+package com.chumazkiyway.weather.views.activities
 
 import android.app.Activity
 import android.content.Intent

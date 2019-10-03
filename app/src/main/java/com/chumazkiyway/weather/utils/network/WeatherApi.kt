@@ -12,9 +12,20 @@ interface WeatherApi {
             "&limit=7" +
             "&fields=periods.icon,periods.dateTimeISO,periods.maxTempC,loc,periods.minTempC,periods.maxHumidity," +
             "periods.windSpeedMaxKPH,periods.windDirMax")
-    fun getDailyForecast(
+    fun getDailyForecastByLatLng(
         @Path("lat") lat: Double,
         @Path("lng") long: Double,
+        @Query("client_id") clientId: String,
+        @Query("client_secret") clientSecret: String ): Observable<Response>
+
+    @GET("forecasts/{city}?" +
+            "&format=json" +
+            "&filter=day" +
+            "&limit=7" +
+            "&fields=periods.icon,periods.dateTimeISO,periods.maxTempC,loc,periods.minTempC,periods.maxHumidity," +
+            "periods.windSpeedMaxKPH,periods.windDirMax")
+    fun getDailyForecastByCity(
+        @Path("city") city: String,
         @Query("client_id") clientId: String,
         @Query("client_secret") clientSecret: String ): Observable<Response>
 
