@@ -9,5 +9,5 @@ import javax.inject.Singleton
 class LocationModule {
     @Provides
     @Singleton
-    fun getLocation() : Location = Location("", 35.18333, 47.81667)
+    fun getLocation() : Location = Location("City", 0.0, 0.0) //default location
 }

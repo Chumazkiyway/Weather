@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Weather</string>
-    <string name="set_location">Set location</string>
-    <string name="set_current_location">Set current location</string>
+    <string name="pick_location">Pick location</string>
+    <string name="define_current_location">Define current location</string>
     <string name="weather_icon">Weather icon</string>
     <string name="temperature_icon">Temperature icon</string>
     <string name="wind_icon">Wind icon</string>

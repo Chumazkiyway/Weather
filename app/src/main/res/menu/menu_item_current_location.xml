@@ -2,7 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item app:showAsAction="always"
-          android:title="@string/set_current_location"
+          android:title="@string/define_current_location"
           android:id="@+id/item_set_current_location"
           android:icon="@drawable/ic_my_location"/>
 </menu>

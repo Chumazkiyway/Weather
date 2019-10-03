@@ -52,7 +52,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback , GoogleMap.OnMapCl
         map.moveCamera(CameraUpdateFactory.newLatLng(defaultLocation))
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMapClickListener(this)
-        val cameraPosition = CameraPosition.Builder().target(defaultLocation).zoom(14.0f).build()
+        val cameraPosition = CameraPosition.Builder().target(defaultLocation).zoom(12.0f).build()
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         map.moveCamera(cameraUpdate)
         map.uiSettings.isZoomControlsEnabled = false

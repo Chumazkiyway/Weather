@@ -30,7 +30,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/set_location" />
+                    android:contentDescription="@string/pick_location" />
             <TextView
                     android:id="@+id/tv_current_location"
                     android:layout_width="wrap_content"

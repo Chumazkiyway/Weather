@@ -52,6 +52,11 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
 
     fun getTimeForecast (position: Int) {
         currentPosition = position
+
+        if(dailyForecastList.value?.size!! <= currentPosition) {
+            return
+        }
+
         selectedDay.value = dailyForecastList.value?.get(currentPosition)
 
         val (from, to) = getFromTo(
@@ -116,7 +121,7 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
 
     fun onSelectedLocation(city: String) {
         location.cityName = city
-        cityName.value = city.substring(0,city.indexOf(','))
+        cityName.value = if(city.contains(',')) city.substring(0,city.indexOf(',')) else city
         compositeDisposable.add(getDayForecastByCity())
         compositeDisposable.add(getLatLng())
     }
@@ -141,8 +146,8 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
         res.locPeriods?.forEach{
             it.periods?.forEach { period ->
                 val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale).parse(period.dateTimeISO)
-                val dayOfWeek = SimpleDateFormat("EEE", locale).format(df)
-                val date = SimpleDateFormat("EEE, dd MMMMMM", locale).format(df)
+                val dayOfWeek = SimpleDateFormat("EE", locale).format(df)
+                val date = SimpleDateFormat("EE, dd MMMM", locale).format(df)
                 val windDir = getWindDirIcon(period.windDirMax!!)
                 val weather = getWeatherIcon(period.icon!!)
 
@@ -153,7 +158,9 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
             }
         }
         dailyForecastList.value = list
-        selectedDay.value = dailyForecastList.value?.get(currentPosition)
+        if(list.size > currentPosition) {
+            selectedDay.value = dailyForecastList.value?.get(currentPosition)
+        }
         getTimeForecast(currentPosition)
     }
 
@@ -164,15 +171,19 @@ class MainActivityViewModel(private val locale: Locale, private val context: Con
                 if(results.first().locality != null) {
                     it.onSuccess(results.first().locality)
                 } else {
-                    it.onSuccess("")
+                    it.onSuccess("The Place wasn't recognized")
                 }
 
             } catch (e: IOException) {
-                Log.e("GEOCODER ERROR:", e.message)
+                Log.e("GEOCODER ERROR", e.message)
                 it.onError(e)
             }
         }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .onErrorReturn {
+                Log.e("GEOCODER ERROR",it.message)
+                "The Place wasn't recognized"
+            }
             .subscribe { res ->
                 location.cityName = res
                 cityName.value = location.cityName
